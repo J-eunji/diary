@@ -1,9 +1,9 @@
 import { useRecoilValue } from "recoil";
 import styled, { css, createGlobalStyle } from "styled-components";
 import CalendarBox from "./components/CalendarBox";
-import CheckList from "./components/CheckList";
+import TodoBlock from "./components/TodoBlock";
 import Memo from "./components/Memo";
-import Header from "./components/Header";
+import TodoHeader from "./components/TodoHeader";
 import { classState, dateState } from "./atoms/date";
 
 function App() {
@@ -18,8 +18,8 @@ function App() {
         </Left>
         {className.map((name) => (
           <Right key={name} date={date === name}>
-            <Header name={name} />
-            <CheckList />
+            <TodoHeader name={name} />
+            <TodoBlock />
             <Memo />
           </Right>
         ))}
@@ -36,10 +36,6 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
   }
-  a {
-    color: #000;
-  }
-
 `;
 
 const Container = styled.div`
@@ -48,13 +44,12 @@ const Container = styled.div`
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: #f4f4f4;
+  background-color: #fffefd;
 `;
 
 const Box = styled.div`
   width: 1200px;
   height: 700px;
-  background-color: #ddd;
   display: flex;
   position: relative;
 `;
@@ -62,7 +57,6 @@ const Box = styled.div`
 const Left = styled.div`
   width: 600px;
   height: 700px;
-  background-color: rgba(0, 0, 0, 0.1);
 `;
 
 const Right = styled.div`
@@ -71,13 +65,15 @@ const Right = styled.div`
   position: absolute;
   top: 0;
   right: 0;
-  background-color: #f1f2f4;
   z-index: 1;
+  border-radius: 10px;
+  background-color: #fef5ed;
+  padding: 25px;
   ${({ date }) =>
     date &&
     css`
       z-index: 2;
-    `}
+    `};
 `;
 
 export default App;

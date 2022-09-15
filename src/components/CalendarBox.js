@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
-import "react-calendar/dist/CalendarCss.css";
+import "../Calendar.css";
 import moment from "moment";
 import { classState, dateState } from "../atoms/date";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useEffect } from "react";
+import { markState } from "../atoms/mark";
 
 export default function CalendarBox() {
   const [className, setClassName] = useRecoilState(classState);
   const [selectDate, setSelectDate] = useRecoilState(dateState);
-  const [mark, setMark] = useState(["15-09-2022"]);
+  const markList = useRecoilValue(markState);
   const formatDate = (a, b) => moment(a).format(b);
   const onChange = (date) => {
     setSelectDate(formatDate(date, "Y년 M월 D일"));
@@ -18,17 +19,27 @@ export default function CalendarBox() {
     if (className.indexOf(selectDate) !== -1) return;
     setClassName([...className, selectDate]);
   }, [selectDate]);
+  console.log(markList.find((mark) => mark === selectDate));
+  console.log(selectDate);
   return (
     <div>
       <Calendar
+        locale={"ko-KR"}
         onChange={(date) => onChange(date)}
-        calendarType={"Hebrew"}
         formatDay={(locale, date) => formatDate(date, "D")}
         minDate={new Date(2019, 12, 1)}
         maxDate={new Date(2070, 1, 1)}
-        tileClassName={({ date, view }) => {
-          if (mark.find((x) => x === moment(date).format("DD-MM-YYYY"))) {
-            return "highlight";
+        tileContent={({ date, view }) => {
+          if (
+            markList.find((mark) => mark === moment(date).format("Y년 M월 D일"))
+          ) {
+            return (
+              <>
+                <div className="flex justify-center items-center absoluteDiv">
+                  <div className="highlight"></div>
+                </div>
+              </>
+            );
           }
         }}
       />
