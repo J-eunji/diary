@@ -5,6 +5,7 @@ import TodoBlock from "./components/TodoBlock";
 import Memo from "./components/Memo";
 import TodoHeader from "./components/TodoHeader";
 import { classState, dateState } from "./atoms/date";
+import TodoInput from "./components/TodoInput";
 
 function App() {
   const className = useRecoilValue(classState);
@@ -20,6 +21,7 @@ function App() {
           <Right key={name} date={date === name}>
             <TodoHeader name={name} />
             <TodoBlock />
+            <TodoInput date={date} />
             <Memo />
           </Right>
         ))}
@@ -62,13 +64,13 @@ const Left = styled.div`
 const Right = styled.div`
   width: 600px;
   height: 700px;
-  position: absolute;
-  top: 0;
-  right: 0;
   z-index: 1;
   border-radius: 10px;
   background-color: #fef5ed;
   padding: 25px;
+  position: absolute;
+  top: 0;
+  right: 0;
   ${({ date }) =>
     date &&
     css`

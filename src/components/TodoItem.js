@@ -4,29 +4,51 @@ import styled, { css } from "styled-components";
 import { dateState } from "../atoms/date";
 import { todoAtomFamily } from "../atoms/todo";
 import { BsCheckSquareFill } from "react-icons/bs";
-import { markState } from "../atoms/mark";
+import { undoneMark, doneMark } from "../atoms/mark";
+import { undoneCountFamily } from "../atoms/todo";
+import { useEffect } from "react";
 
 export default function TodoItem({ todo }) {
   const date = useRecoilValue(dateState);
   const [todoList, setTodoList] = useRecoilState(todoAtomFamily(date));
-  const [markList, setMarkList] = useRecoilState(markState);
+  const [undoneMarkList, setUndoneMarkList] = useRecoilState(undoneMark);
+  const [doneMarkList, setDoneMarkList] = useRecoilState(doneMark);
+  const count = useRecoilValue(undoneCountFamily(date));
 
   const { id, text, done } = todo;
 
-  const onToggle = () =>
+  const onToggle = () => {
     setTodoList((todoList) =>
       todoList.map((todo) =>
         todo.id === id ? { ...todo, done: !todo.done } : todo
       )
     );
+  };
+
+  useEffect(() => {
+    if (count === 0) {
+      if (todoList.length > 1) {
+        if (doneMarkList.indexOf(date) === -1) {
+          setDoneMarkList(() => [...doneMarkList, date]);
+        }
+        setUndoneMarkList(undoneMarkList.filter((mark) => mark !== date));
+      } else if (todoList.length > 1) {
+        if (doneMarkList.length > 0) {
+          setDoneMarkList(doneMarkList.filter((mark) => mark !== date));
+        }
+      }
+    } else if (count !== 0)
+      if (undoneMarkList.indexOf(date) === -1) {
+        setUndoneMarkList(() => [...undoneMarkList, date]);
+      }
+  }, [todoList]);
+
+  console.log(undoneMarkList);
 
   const onRemove = () => {
     setTodoList((todoList) => todoList.filter((todo) => todo.id !== id));
-    if (todoList.length === 1) {
-      setMarkList([markList.filter((mark) => mark !== date)]);
-    }
   };
-  console.log(todoList);
+
   return (
     <Container>
       <TodoText onClick={onToggle} done={done}>
@@ -56,6 +78,7 @@ const TodoText = styled.p`
   user-select: none;
   margin: 0 5px;
   .check {
+    font-size: 1em;
     color: #ddd;
     margin-right: 5px;
   }

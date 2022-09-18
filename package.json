@@ -1,5 +1,5 @@
 {
-  "name": "diary",
+  "name": "todolist",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,6 +16,7 @@
     "react-router-dom": "^6.4.0",
     "react-scripts": "5.0.1",
     "recoil": "^0.7.5",
+    "recoil-persist": "^4.2.0",
     "styled-components": "^5.3.5",
     "styled-reset": "^4.4.2",
     "web-vitals": "^2.1.4"
@@ -24,7 +25,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -43,5 +46,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "homepage": "https://j-eunji.github.io/todolist/",
+  "devDependencies": {
+    "gh-pages": "^4.0.0"
   }
 }

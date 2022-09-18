@@ -1,9 +1,8 @@
-import { useEffect } from "react";
 import { useState, useRef } from "react";
 import { useRecoilValue, useRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 import { dateState } from "../atoms/date";
-import { markState } from "../atoms/mark";
+import { undoneMark } from "../atoms/mark";
 import { todoAtomFamily } from "../atoms/todo";
 
 export default function TodoInput() {
@@ -12,7 +11,7 @@ export default function TodoInput() {
   const nextId = useRef(1);
   const date = useRecoilValue(dateState);
   const [todoList, setTodoList] = useRecoilState(todoAtomFamily(date));
-  const [markList, setMarkList] = useRecoilState(markState);
+  const [undoneMarkList, setUndoneMarkList] = useRecoilState(undoneMark);
   const onClick = () => setAdd(!add);
   const onCreate = (e) => {
     e.preventDefault();
@@ -22,18 +21,17 @@ export default function TodoInput() {
       );
     nextId.current++;
     setTodoInput("");
-    if (todoList.length > 0) if (markList.indexOf(date) !== -1) return;
-    setMarkList([...markList, date]);
+    if (todoList.length > 0) if (undoneMarkList.indexOf(date) !== -1) return;
+    setUndoneMarkList([...undoneMarkList, date]);
   };
 
-  console.log(markList);
   const onChange = ({ target: { value } }) => {
     setTodoInput(value);
   };
 
   return (
     <Container>
-      <AddBtn onClick={onClick}>+</AddBtn>
+      <AddBtn onClick={onClick}>{!add ? "+" : "-"}</AddBtn>
       <InputBox add={add} onSubmit={onCreate}>
         <input
           type={"text"}
@@ -49,16 +47,19 @@ export default function TodoInput() {
 
 const Container = styled.div`
   display: flex;
+  height: 30px;
+  background-color: none;
+  margin-bottom: 20px;
 `;
 const InputBox = styled.form`
-  height: 30px;
   input {
     width: 300px;
     height: 30px;
     border: none;
-    border-bottom: 1px solid #3f1f03;
+    background-color: #fef5ed;
     &:focus {
-      outline: 1px;
+      outline: none;
+      border-bottom: 1px solid #3f1f03;
     }
   }
   button {
